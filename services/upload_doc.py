@@ -2,7 +2,7 @@ from uuid import uuid4
 from fastapi import HTTPException
 import json
 from typing import List, Dict
-from models.input_models import UploadDocumentRequest
+from models.input_models import UploadDocumentRequest, Document
 from utils.split_into_chunks import split_into_chunks
 import os
 
@@ -28,19 +28,25 @@ def upload_doc() -> Dict:
 
 
 # Guardar documentos en un archivo local
-def save_documents(documents :UploadDocumentRequest ):
+def save_documents(documents: List[Document]):
     """Save documents from the request to a JSON file to persist."""
     # Input validation
-    if not isinstance(documents, UploadDocumentRequest):
+    if not isinstance(documents, list):
         raise ValueError("Invalid document format. Expected an UploadDocumentRequest object.")
-    if not documents.title:
-        raise ValueError("The document title cannot be empty.")
-    if not documents.content:
-        raise ValueError("The document content cannot be empty.")
+    for document in documents:
+        if not isinstance(document, Document):
+            raise ValueError("Invalid document format. Expected a list of Document objects.")
+        if not document.title:
+            raise ValueError("The document title cannot be empty.")
+        if not document.content:
+            raise ValueError("The document content cannot be empty.")
 
     try:
         # Split document into chunks before saving
-        chunks=split_into_chunks(documents.content)
+        chunks=[]
+        for document in documents:
+            chunks.extend(split_into_chunks(document.content))
+
         if not chunks:
             raise ValueError("No chunks generated from the document content.")
         ids= []
@@ -55,17 +61,16 @@ def save_documents(documents :UploadDocumentRequest ):
                     saved_chunks = []
         else:
             saved_chunks = []
-        for chunk in chunks:
-            document_id = str(uuid4())
-            document = {}
-            # Create a dictionary with the document ID, title, and content
-            document = {
-                "document_id": document_id,
-                "title": documents.title,
-                "content": chunk,
-            }
+        for document in documents:
+            for chunk in chunks:
+                document_id = str(uuid4())
+                chunk_document  = {
+                    "document_id": document_id,
+                    "title": document.title,
+                    "content": chunk,
+                }
             # Append the document to the list
-            new_chunks.append(document)
+            new_chunks.append(chunk_document)
             ids.append(document_id)
         saved_chunks.extend(new_chunks)
         # Save the updated list to the file

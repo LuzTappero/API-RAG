@@ -1,8 +1,12 @@
 from pydantic import BaseModel
+from typing import List, Union
 
-class UploadDocumentRequest(BaseModel):
+class Document(BaseModel):
     title: str
     content: str
+
+class UploadDocumentRequest(BaseModel):
+    documents: Union[Document, List[Document]]
 
 class EmbeddingRequest(BaseModel):
     document_id: str

@@ -17,7 +17,7 @@ collection = chroma_client.get_or_create_collection(collection_name)
 
 docs = upload_doc()
 
-def create_doc_embedding(document_id: str) -> str:
+def create_doc_embedding(document_id: str, matching_chunks) -> str:
     """
     Creates embeddings for a given document and saves them to ChromaDB.
 

@@ -25,9 +25,14 @@ def upload_document(request: UploadDocumentRequest):
     """
     try:
         # Input validation
-        if not request.title or not request.content:
-            raise HTTPException(status_code=400, detail="Title and content are required.")
-        response = save_documents(request)
+        documents = request.documents if isinstance(request.documents, list) else [request.documents]
+        print("Documentos recibidos:", documents)
+        for doc in documents:
+            if not doc.title or not doc.content:
+                raise HTTPException(status_code=400, detail="Each document must have a title and content.")
+        print("Documentos validados correctamente")
+        response = save_documents(documents)
+        print("Documentos guardados correctamente")
         return response
     except HTTPException as e:
         raise e
@@ -56,7 +61,7 @@ def generate_embeddings(request: EmbeddingRequest):
         if not matching_chunks:
             raise HTTPException(status_code=404, detail="Document chunk not found")
 
-        new_embedding_id = create_doc_embedding(document_id)
+        new_embedding_id = create_doc_embedding(document_id, matching_chunks[0])
         return {
             "message": "Embeddings generated successfully",
             "document_id": new_embedding_id
