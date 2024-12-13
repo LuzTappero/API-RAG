@@ -37,9 +37,9 @@ Instrucciones para utilizar el proyecto, incluyendo ejemplos de código y explic
 
 ## Descripción de los endpoints
 
-1. /upload_document
+1./upload_document
 
-Este endpoint permite subir documentos con un título y contenido. Los datos enviados serán procesados y almacenados (por ahora) en un archivo json para persistencia.
+-- Este endpoint permite subir documentos con un título y contenido. Los datos enviados serán procesados y almacenados (por ahora) en un archivo json para persistencia.
 
 -- Ejemplo de solicitud:
 
@@ -57,7 +57,7 @@ Este endpoint permite subir documentos con un título y contenido. Los datos env
 
 2. /generate_embeddings
 
-Genera representaciones vectoriales (embeddings) para un fragmento de texto asociado a un documento previamente subido. Esto permite búsquedas rápidas y relevantes en la base de datos.
+-- Genera representaciones vectoriales (embeddings) para un fragmento de texto asociado a un documento previamente subido. Esto permite búsquedas rápidas y relevantes en la base de datos.
 
 -- Ejemplo de solicitud:
 
@@ -73,7 +73,8 @@ Genera representaciones vectoriales (embeddings) para un fragmento de texto asoc
         }
 
 3. /search
-Realiza una búsqueda en la base de datos para encontrar los documentos más relevantes basados en una consulta en texto. Devuelve un conjunto de resultados con el ID del documento, un fragmento relevante de su contenido y un puntaje de relevancia.
+   
+--Realiza una búsqueda en la base de datos para encontrar los documentos más relevantes basados en una consulta en texto. Devuelve un conjunto de resultados con el ID del documento, un fragmento relevante de su contenido y un puntaje de relevancia.
 
 -- Ejemplo de solicitud:
 
@@ -100,7 +101,8 @@ Realiza una búsqueda en la base de datos para encontrar los documentos más rel
         }
 
 4. /ask
-Genera una respuesta detallada utilizando el modelo de lenguaje basado en la consulta proporcionada. Este endpoint combina la recuperación de información y la generación de texto para ofrecer respuestas personalizadas.
+   
+-- Genera una respuesta detallada utilizando el modelo de lenguaje basado en la consulta proporcionada. Este endpoint combina la recuperación de información y la generación de texto para ofrecer respuestas personalizadas.
 
 -- Ejemplo de solicitud:
 
