@@ -1,30 +1,30 @@
-import chromadb
 from fastapi import APIRouter, HTTPException
-from typing import List, Dict
-from fastapi import FastAPI, Request
-import uuid
 from services.upload_doc import save_documents,upload_doc
-from services.create_embedding import create_embedding
+from services.create_doc_embedding import create_doc_embedding
 from services.create_query_embedding import create_query_embedding
-from models.upload_model import UploadDocumentRequest
-from models.embedd_model import EmbeddingRequest, QueryRequest, AskRequest
 from services.search_embed_data import search_documents
-import os
-import cohere
-from services.ask_request import generate_response
-
-COHERE_API_KEY = os.getenv("API_KEY")
-co = cohere.ClientV2(COHERE_API_KEY)
+from services.generate_response_with_llm import generate_response
+from models.input_models import EmbeddingRequest, QueryRequest, AskRequest,UploadDocumentRequest
 
 router= APIRouter()
 
-# Archivo para persistir documentos
+# File to persist documents
 DOCUMENTS_FILE = "documents.json"
 docs = upload_doc()
 
 @router.post("/upload_document")
 def upload_document(request: UploadDocumentRequest):
+    """
+    API endpoint to upload documents from a request.
+
+    Args:
+        request (request: UploadDocumentRequest):The request contains the document title and content.
+
+    Returns:
+        dict: Response indicating successful document upload and document ID.
+    """
     try:
+        # Input validation
         if not request.title or not request.content:
             raise HTTPException(status_code=400, detail="Title and content are required.")
         response = save_documents(request)
@@ -50,12 +50,13 @@ def generate_embeddings(request: EmbeddingRequest):
         dict: Message and document ID indicating successful embedding generation.
     """
     try:
+        #Find document by ID to generate embeddings
         document_id = request.document_id
         matching_chunks = [doc for doc in docs if doc.get("document_id") == document_id]
         if not matching_chunks:
             raise HTTPException(status_code=404, detail="Document chunk not found")
 
-        new_embedding_id = create_embedding(document_id)
+        new_embedding_id = create_doc_embedding(document_id)
         return {
             "message": "Embeddings generated successfully",
             "document_id": new_embedding_id
@@ -66,39 +67,52 @@ def generate_embeddings(request: EmbeddingRequest):
 @router.post("/search")
 def search(query_request: QueryRequest):
     """
-    Realiza una búsqueda en los documentos según la consulta recibida.
+    API endpoint to search data and return results based on a query.
+
+    Args:
+        request (QueryRequest:str): The request containing the query.
+
+    Returns:
+        dict: A dictionary containing the search results.
     """
     try:
+        # Input validation
         query = query_request.query
         if not query:
-            raise HTTPException(status_code=400, detail="La consulta no puede estar vacía.")
+            raise HTTPException(status_code=400, detail="The query cannot be empty.")
+        #generate query embedding
         query_embedding = create_query_embedding(query)
+        #search documents based on query embedding and return results
         results = search_documents(query_embedding)
         if not results:
-            raise HTTPException(status_code=404, detail="No se encontraron resultados para la consulta.")
+            raise HTTPException(status_code=404, detail="No results were found for the query.")
         return {"results": results}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error interno al realizar la búsqueda: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal error when searching: {str(e)}")
 
 @router.post("/ask")
 def ask(question_request: AskRequest):
+    """
+    API endpoint to ask a question.
+
+    Args:
+        request (AskRequest:str): The request containing the question.
+
+    Returns:
+        dict: A dictionary containing the answer generated with LLM, based on the most relevant content related.
+    """
+    #get question from the request
     question_text = question_request.question
+    #create query embedding
     question_embedding = create_query_embedding(question_text)
+    #search documents
     search_results = search_documents(question_embedding)
 
+    #get most relevant content
     most_relevant_content = search_results[0]['content_snippet']
 
-    system_prompt= """
-        Tu trabajo es responder a las preguntas, con las siguientes características:
-        - Responde de manera amigable y con tono entusiasta, como si le hablaras a un niño.
-        - Responde en máximo 3 oraciones.
-        - Agrega emojis a la respuesta.
-        - Ante la misma pregunta debes responder lo más similar posible para cada interacción.
-        - Responde siempre en español, sin importar en qué idioma se haga la pregunta.
-        - Solo debes utilizar el contenido de las historias para responder sobre las preguntas del usuario.
-        """
-
-    response = generate_response(most_relevant_content, system_prompt,question_text)
+    #generate response with LLM
+    response = generate_response(most_relevant_content,question_text)
     return {"answer": response}
 
 

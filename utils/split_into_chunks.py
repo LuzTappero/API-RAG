@@ -1,6 +1,7 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def split_into_chunks(text: str):
+    """Create chunks from the input text."""
     if not text or not isinstance(text, str):
         raise ValueError("Input must be a non-empty string")
 
