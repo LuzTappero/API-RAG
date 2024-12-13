@@ -79,21 +79,21 @@ Realiza una búsqueda en la base de datos para encontrar los documentos más rel
 
 -- Ejemplo de respuesta:
 
-{
-    "results": [
         {
-            "document_id": [
-                "query-d5628936-c996-42de-ab19-1e6043b5e64b",
-                "bb941390-2ff8-47c3-b47d-5b3b47908835"
-            ],
-            "content_snippet": [
-                "¿Qué le gusta hacer a Puck?",
-                "Había un pequeño duende llamado Puck, conocido por su espíritu travieso y su amor por las bromas. Vivía en lo profundo del bosque, donde las criaturas del lugar sabían que, si algo extraño sucedía, era obra de él. Puck disfrutaba de hacer desaparecer objetos, cambiar las señales de los senderos y provocar pequeñas confusiones entre los animales. Sin embargo, su diversión nunca era malintencionada; simplemente, amaba ver las reacciones sorprendidas de los demás.\n\nUn día, decidió que quería jugarle una broma a la anciana hada que vivía cerca del arroyo. Ella, conocida por su sabiduría, siempre estaba en silencio, tejiendo sueños y pensamientos en su telar. Puck, con una sonrisa pícara, hechizó un par de hojas doradas para que se posaran sobre el telar de la hada. Cada vez que intentaba mover una hoja, esta volvía a su lugar, causando que la hada frunciera el ceño y murmurara palabras mágicas, buscando entender qué ocurría.\n\nAl ver que su broma causaba más confusión de lo esperado, Puck comenzó a sentirse un poco culpable. No quería que la hada se sintiera mal ni que su pequeña travesura interfiriera en su trabajo. Decidió entonces poner fin a la broma, pero no sin antes hacer algo más para solucionar las cosas. Usó su magia para hacer que las hojas se transformaran en pequeñas flores brillantes, que adornaron el telar y alegraron el entorno. La hada, al ver el cambio, sonrió, comprendiendo que Puck había hecho su travesura con buenas intenciones.\n\nDesde ese día, Puck aprendió que, aunque las bromas eran divertidas, también era importante ser considerado con los demás. Aunque seguía disfrutando de su naturaleza traviesa, nunca olvidó la lección que le enseñó la sabia hada: las risas compartidas son mucho más valiosas cuando se hacen con cariño y respeto."
-            ],
-            "similarity_score": 0.7138328552246094
+            "results": [
+                {
+                    "document_id": [
+                        "query-d5628936-c996-42de-ab19-1e6043b5e64b",
+                        "bb941390-2ff8-47c3-b47d-5b3b47908835"
+                    ],
+                    "content_snippet": [
+                        "¿Qué le gusta hacer a Puck?",
+                        "Había un pequeño duende llamado Puck, conocido por su espíritu travieso y su amor por las bromas. Vivía en lo profundo del bosque, donde las criaturas del lugar sabían que, si algo extraño sucedía, era obra de él. Puck disfrutaba de hacer desaparecer objetos, cambiar las señales de los senderos y provocar pequeñas confusiones entre los animales. Sin embargo, su diversión nunca era malintencionada; simplemente, amaba ver las reacciones sorprendidas de los demás.\n\nUn día, decidió que quería jugarle una broma a la anciana hada que vivía cerca del arroyo. Ella, conocida por su sabiduría, siempre estaba en silencio, tejiendo sueños y pensamientos en su telar. Puck, con una sonrisa pícara, hechizó un par de hojas doradas para que se posaran sobre el telar de la hada. Cada vez que intentaba mover una hoja, esta volvía a su lugar, causando que la hada frunciera el ceño y murmurara palabras mágicas, buscando entender qué ocurría.\n\nAl ver que su broma causaba más confusión de lo esperado, Puck comenzó a sentirse un poco culpable. No quería que la hada se sintiera mal ni que su pequeña travesura interfiriera en su trabajo. Decidió entonces poner fin a la broma, pero no sin antes hacer algo más para solucionar las cosas. Usó su magia para hacer que las hojas se transformaran en pequeñas flores brillantes, que adornaron el telar y alegraron el entorno. La hada, al ver el cambio, sonrió, comprendiendo que Puck había hecho su travesura con buenas intenciones.\n\nDesde ese día, Puck aprendió que, aunque las bromas eran divertidas, también era importante ser considerado con los demás. Aunque seguía disfrutando de su naturaleza traviesa, nunca olvidó la lección que le enseñó la sabia hada: las risas compartidas son mucho más valiosas cuando se hacen con cariño y respeto."
+                    ],
+                    "similarity_score": 0.7138328552246094
+                }
+            ]
         }
-    ]
-}
 
 4. /ask
 Genera una respuesta detallada utilizando el modelo de lenguaje basado en la consulta proporcionada. Este endpoint combina la recuperación de información y la generación de texto para ofrecer respuestas personalizadas.
