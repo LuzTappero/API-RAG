@@ -42,16 +42,16 @@ Instrucciones para utilizar el proyecto, incluyendo ejemplos de código y explic
 Este endpoint permite subir documentos con un título y contenido. Los datos enviados serán procesados y almacenados (por ahora) en un archivo json para persistencia.
 
 -- Ejemplo de solicitud:
-    {
-        "title": "El duende",
-        "content": "Había un pequeño duende llamado Puck, conocido por su espíritu travieso..."
-    }
+        {
+            "title": "El duende",
+            "content": "Había un pequeño duende llamado Puck, conocido por su espíritu travieso..."
+        }
 
 -- Ejemplo de respuesta:
-    {
-        "message": "Document successfully uploaded",
-        "document_id": ids[0],
-    }
+        {
+            "message": "Document successfully uploaded",
+            "document_id": ids[0],
+        }
 
 2. /generate_embeddings
 
@@ -59,23 +59,23 @@ Genera representaciones vectoriales (embeddings) para un fragmento de texto asoc
 
 -- Ejemplo de solicitud:
 
-    {
-        "id": "e0786cd2-aa5d-422d-9547-d228aa14e69a"
-    }
+        {
+            "id": "e0786cd2-aa5d-422d-9547-d228aa14e69a"
+        }
 
 -- Ejemplo de respuesta:
-    {
-        "message": "Embeddings generated successfully",
-        "document_id": "e0786cd2-aa5d-422d-9547-d228aa14e69a"
-    }
+        {
+            "message": "Embeddings generated successfully",
+            "document_id": "e0786cd2-aa5d-422d-9547-d228aa14e69a"
+        }
 
 3. /search
 Realiza una búsqueda en la base de datos para encontrar los documentos más relevantes basados en una consulta en texto. Devuelve un conjunto de resultados con el ID del documento, un fragmento relevante de su contenido y un puntaje de relevancia.
 
 -- Ejemplo de solicitud:
-{
-    "query": "¿Quiénes eran Sol y Luna?"
-}
+        {
+            "query": "¿Quiénes eran Sol y Luna?"
+        }
 
 -- Ejemplo de respuesta:
 
@@ -99,13 +99,13 @@ Realiza una búsqueda en la base de datos para encontrar los documentos más rel
 Genera una respuesta detallada utilizando el modelo de lenguaje basado en la consulta proporcionada. Este endpoint combina la recuperación de información y la generación de texto para ofrecer respuestas personalizadas.
 
 -- Ejemplo de solicitud:
-{
-    "question": "¿Qué le gusta hacer a Puck?"
-}
+        {
+            "question": "¿Qué le gusta hacer a Puck?"
+        }
 
 -- Ejemplo de respuesta:
-{
-    "answer": "A Puck le encanta jugar y hacer travesuras, ¡es muy travieso y divertido! 😁🤪🎉"
-}
+        {
+            "answer": "A Puck le encanta jugar y hacer travesuras, ¡es muy travieso y divertido! 😁🤪🎉"
+        }
 
 
