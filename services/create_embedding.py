@@ -5,9 +5,8 @@ import cohere
 from dotenv import load_dotenv
 import os
 import chromadb
-from utils.text_utils import split_into_chunks
 from services.upload_doc import upload_doc
-# from services.save_embedding import save_embedding
+
 
 load_dotenv()
 chroma_client = chromadb.Client()
@@ -20,6 +19,8 @@ docs = upload_doc()
 COHERE_API_KEY = os.getenv("API_KEY")
 co = cohere.ClientV2(COHERE_API_KEY)
 
+docs= upload_doc()
+
 def create_embedding(document_id: str) -> str:
     """
     Creates embeddings for a given document and saves them to ChromaDB.
@@ -31,49 +32,33 @@ def create_embedding(document_id: str) -> str:
         str: The ID of the document after saving the embeddings.
     """
     try:
-        if document_id not in docs:
-            raise HTTPException(status_code=404, detail="Document not found")
+        matching_chunks = [doc for doc in docs if doc["document_id"] == document_id]
+        if not matching_chunks:
+            raise HTTPException(status_code=404, detail="Document chunk not found")
 
-        document = docs[document_id]
-        content = document.get('content')
+        document = matching_chunks[0]
+        content = document.get("content")
         if not content or not content.strip():
-            raise HTTPException(status_code=400, detail="Document content is empty or invalid.")
-
-        text_chunks = split_into_chunks(content)
-        if not text_chunks:
-            raise HTTPException(status_code=400, detail="No valid chunks to process.")
+            raise HTTPException(status_code=400, detail="Document chunk content is empty or invalid.")
 
         embedding_response = co.embed(
-            texts=text_chunks,
+            texts=[content],
             model="embed-multilingual-v3.0",
             input_type="search_document",
             embedding_types=["float"],
         )
         embeddings = embedding_response.embeddings.float_
 
-        if not embeddings or len(embeddings) != len(text_chunks):
-            raise HTTPException(status_code=500, detail="Failed to generate embeddings or mismatch with chunks.")
+        if not embeddings or len(embeddings) != 1:
+            raise HTTPException(status_code=500, detail="Failed to generate embeddings for the document chunk.")
 
-        document_title = document.get('title', 'Untitled')
-        documents_with_title = [
-            {
-                "id": f"{document_id}_{i}",
-                "title": document_title,
-                "content": text_chunk
-            }
-            for i, text_chunk in enumerate(text_chunks)
-        ]
-
-        print("Documentos con título:", documents_with_title)  # Agrega este print aquí
-
-        ids = [f"{document_id}_{uuid.uuid4()}" for _ in range(len(text_chunks))]
         collection.add(
-            documents=[doc["content"] for doc in documents_with_title],
+            documents=[content],
             embeddings=embeddings,
-            ids=ids,
+            ids=[document_id]
         )
-        print(f"Embeddings generated and added to collection for document ID: {collection}")
+        print(f"Embedding generated and added to collection for document chunk ID: {document_id}")
 
-        return ids[0]  # Return the first ID as the primary identifier
+        return document_id
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing embeddings: {str(e)}")
